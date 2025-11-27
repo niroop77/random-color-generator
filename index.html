@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Color Generator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="color-generator">Random Color Generator</div>
+<button id="refresh-btn">Refresh Colors</button>
+<div class="random-colors" id="random-colors"></div>
+
+<script>
+    // Generate random hex color
+    var generateRandomColor = function() {
+        var codes = "0123456789abcdef";
+        var hex = "#";
+        for (var i = 0; i < 6; i++) {
+            hex += codes[Math.floor(Math.random() * 16)];
+        }
+        return hex;
+    };
+
+    // Create color box element
+    var createColorBox = function(hex) {
+        var box = document.createElement("div");
+        box.className = "color-box";
+        box.style.backgroundColor = hex;
+        box.textContent = hex;
+
+        var tooltip = document.createElement("span");
+        tooltip.className = "tooltip";
+        tooltip.textContent = "Copied!";
+        box.appendChild(tooltip);
+
+        // Copy color to clipboard
+        box.addEventListener("click", function() {
+            navigator.clipboard.writeText(hex).then(function() {
+                tooltip.classList.add("show");
+                setTimeout(function() {
+                    tooltip.classList.remove("show");
+                }, 1500);
+            }).catch(function(err) {
+                console.error("Error copying text", err);
+            });
+        });
+
+        return box;
+    };
+
+    // Initialize grid with color boxes
+    var initializeColorBoxes = function(count) {
+        var container = document.getElementById("random-colors");
+        container.innerHTML = "";
+        for (var i = 0; i < count; i++) {
+            var hex = generateRandomColor();
+            container.appendChild(createColorBox(hex));
+        }
+    };
+
+    // Refresh button
+    var refreshBtn = document.getElementById("refresh-btn");
+    refreshBtn.addEventListener("click", function() {
+        initializeColorBoxes(6);
+    });
+
+    // Load initial boxes
+    initializeColorBoxes(6);
+</script>
+
+</body>
+</html>
